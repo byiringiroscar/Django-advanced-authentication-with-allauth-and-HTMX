@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import ProfileForm
+from .forms import ProfileForm, EmailForm
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.contrib.auth.models import User
@@ -33,3 +33,17 @@ def profile_edit_view(request):
     else:
         onboarding = False
     return render(request, 'a_users/profile_edit.html', {'form': form})
+
+
+@login_required
+def profile_settings_view(request):
+    return render(request, 'a_users/profile_settings.html')
+
+
+@login_required
+def profile_emailchange(request):
+    if request.htmx:
+        form = EmailForm(instance=request.user)
+        return render(request, 'partials/email_form.html', {'form': form})
+    
+    return redirect('home')
